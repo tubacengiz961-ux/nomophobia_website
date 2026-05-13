@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Slider } from '@/components/ui/slider';
-import { Heart, Brain, Zap, Activity, Clock, Smile, AlertCircle } from 'lucide-react';
+import { Heart, Brain, Zap, Activity, Clock, Smile, AlertCircle, TrendingDown, Target, CheckCircle2, AlertTriangle } from 'lucide-react';
 
 /**
  * Nomofobi Web Sitesi - Ana Sayfa
@@ -22,6 +22,7 @@ export default function Home() {
   const [testResult, setTestResult] = useState<number | null>(null);
   const [dailyUsage, setDailyUsage] = useState(240);
   const [moodLevel, setMoodLevel] = useState(5);
+  const [calculatorStep, setCalculatorStep] = useState<'input' | 'results'>('input');
 
   const testQuestions = [
     "Telefonunuz olmadan ne kadar süre dayanabilirsiniz?",
@@ -90,7 +91,67 @@ export default function Home() {
     return suggestions[level - 1] || suggestions[4];
   };
 
+  // Detoks hedefleri hesapla
+  const calculateDetoxGoals = (currentUsage: number) => {
+    const riskLevel = currentUsage > 480 ? 'high' : currentUsage > 240 ? 'medium' : 'low';
+    
+    // Haftalık hedef: Mevcut kullanımdan %20-%30 azalma
+    const reductionPercentage = riskLevel === 'high' ? 0.30 : riskLevel === 'medium' ? 0.25 : 0.15;
+    const weeklyReduction = Math.round(currentUsage * reductionPercentage);
+    const targetDailyUsage = Math.max(60, currentUsage - weeklyReduction);
+    
+    // Haftalık tasarruf
+    const weeklySavings = (currentUsage - targetDailyUsage) * 7;
+    
+    // 4 haftalık hedef (daha agresif)
+    const monthlyReduction = Math.round(currentUsage * (riskLevel === 'high' ? 0.50 : riskLevel === 'medium' ? 0.40 : 0.25));
+    const monthlyTargetUsage = Math.max(60, currentUsage - monthlyReduction);
+    
+    return {
+      riskLevel,
+      currentUsage,
+      weeklyReduction,
+      targetDailyUsage,
+      weeklySavings,
+      monthlyReduction,
+      monthlyTargetUsage,
+      monthlyGoalSavings: (currentUsage - monthlyTargetUsage) * 28
+    };
+  };
+
+  // Detoks hedefleri tabanlı aktiviteler öner
+  const getDetoxActivities = (riskLevel: string) => {
+    const activities = {
+      high: [
+        { icon: '🧘', title: 'Günlük Meditasyon', description: 'Sabah 10 dakika, akşam 10 dakika meditasyon yapın' },
+        { icon: '📚', title: 'Okuma Alışkanlığı', description: 'Günde 30 dakika kitap okuyun (telefonsuz)' },
+        { icon: '🏃', title: 'Egzersiz Rutini', description: 'Günde 45 dakika yürüyüş veya spor yapın' },
+        { icon: '👥', title: 'Yüz Yüze Sosyalleşme', description: 'Haftada 3 gün arkadaş/aile ile zaman geçirin' },
+        { icon: '🎨', title: 'Yaratıcı Hobi', description: 'Resim, yazı yazma veya müzik gibi bir hobi başlayın' },
+        { icon: '😴', title: 'Uyku Hijyeni', description: 'Yatakta telefon kullanmayın, gece 22:00 sonrası ekran yok' }
+      ],
+      medium: [
+        { icon: '🧘', title: 'Hafif Meditasyon', description: 'Haftada 3 gün 5-10 dakika meditasyon' },
+        { icon: '📚', title: 'Haftalık Okuma', description: 'Haftada 3 gün 20 dakika kitap okuyun' },
+        { icon: '🏃', title: 'Düzenli Aktivite', description: 'Haftada 3 gün 30 dakika yürüyüş' },
+        { icon: '👥', title: 'Sosyal Etkinlikler', description: 'Haftada 2 gün yüz yüze sosyalleşme' },
+        { icon: '🎮', title: 'Alternatif Aktiviteler', description: 'Kutu oyunları, puzzle veya enstrüman çalın' },
+        { icon: '⏰', title: 'Zaman Yönetimi', description: 'Gece 21:00 sonrası telefonunuzu başka odaya koyun' }
+      ],
+      low: [
+        { icon: '🧘', title: 'Farkındalık', description: 'Haftada 1-2 gün kısa meditasyon' },
+        { icon: '📚', title: 'Rahat Okuma', description: 'Haftada 1-2 gün hafif okuma' },
+        { icon: '🏃', title: 'Hafif Aktivite', description: 'Haftada 2 gün kısa yürüyüş' },
+        { icon: '👥', title: 'Sosyal Zaman', description: 'Haftada 1-2 gün sosyal etkinlik' },
+        { icon: '🎯', title: 'Bilinçli Kullanım', description: 'Telefonunuzu kullanmadan önce amaç belirleyin' },
+        { icon: '✅', title: 'Farkındalık Günlüğü', description: 'Haftada 2 gün telefon kullanımınızı kaydedin' }
+      ]
+    };
+    return activities[riskLevel as keyof typeof activities] || activities.medium;
+  };
+
   const missedActivities = calculateMissedActivities(dailyUsage);
+  const detoxGoals = calculateDetoxGoals(dailyUsage);
 
   return (
     <div className="min-h-screen bg-background">
@@ -554,7 +615,12 @@ export default function Home() {
       </Dialog>
 
       {/* Ekran Süresi Hesaplayıcı Dialog */}
-      <Dialog open={showCalculator} onOpenChange={setShowCalculator}>
+      <Dialog open={showCalculator && calculatorStep === 'input'} onOpenChange={(open) => {
+        if (!open) {
+          setShowCalculator(false);
+          setCalculatorStep('input');
+        }
+      }}>
         <DialogContent className="max-w-md">
           <DialogHeader>
             <DialogTitle>Ekran Süresi Hesaplayıcı</DialogTitle>
@@ -596,12 +662,157 @@ export default function Home() {
               </div>
             </div>
 
-            <Button 
-              onClick={() => setShowCalculator(false)}
-              className="w-full bg-primary hover:bg-primary/90 text-white"
-            >
-              Kapat
-            </Button>
+            <div className="flex gap-3">
+              <Button 
+                onClick={() => setCalculatorStep('results')}
+                className="flex-1 bg-primary hover:bg-primary/90 text-white"
+              >
+                Detoks Hedeflerini Gör
+              </Button>
+              <Button 
+                onClick={() => setShowCalculator(false)}
+                variant="outline"
+                className="flex-1"
+              >
+                Kapat
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Detoks Hedefleri Dialog */}
+      <Dialog open={showCalculator && calculatorStep === 'results'} onOpenChange={(open) => {
+        if (!open) {
+          setShowCalculator(false);
+          setCalculatorStep('input');
+        }
+      }}>
+        <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>Kişiselleştirilmiş Dijital Detoks Hedefleri</DialogTitle>
+          </DialogHeader>
+
+          <div className="space-y-6">
+            {/* Risk Seviyesi */}
+            <div className="p-4 rounded-lg border-2 border-primary/20 bg-primary/5">
+              <div className="flex items-center gap-3 mb-3">
+                {detoxGoals.riskLevel === 'high' && <AlertTriangle className="w-6 h-6 text-destructive" />}
+                {detoxGoals.riskLevel === 'medium' && <AlertCircle className="w-6 h-6 text-accent" />}
+                {detoxGoals.riskLevel === 'low' && <CheckCircle2 className="w-6 h-6 text-primary" />}
+                <h3 className="text-lg font-bold text-foreground">
+                  {detoxGoals.riskLevel === 'high' && 'Yüksek Risk Seviyesi'}
+                  {detoxGoals.riskLevel === 'medium' && 'Orta Risk Seviyesi'}
+                  {detoxGoals.riskLevel === 'low' && 'Düşük Risk Seviyesi'}
+                </h3>
+              </div>
+              <p className="text-foreground/70 text-sm">
+                {detoxGoals.riskLevel === 'high' && 'Günlük ' + detoxGoals.currentUsage + ' dakika telefon kullanımı endişe verici seviyelerdedir. Hemen harekete geçmeniz önerilir.'}
+                {detoxGoals.riskLevel === 'medium' && 'Günlük ' + detoxGoals.currentUsage + ' dakika telefon kullanımı dikkat gerektirmektedir. Kademeli azaltma planı uygulanmalıdır.'}
+                {detoxGoals.riskLevel === 'low' && 'Günlük ' + detoxGoals.currentUsage + ' dakika telefon kullanımı makul seviyelerdedir. Farkındalığı korumanız yeterlidir.'}
+              </p>
+            </div>
+
+            {/* Haftalık Hedef */}
+            <div className="grid grid-cols-2 gap-4">
+              <Card className="p-4 bg-gradient-to-br from-white to-secondary/10 border-border">
+                <div className="flex items-center gap-2 mb-2">
+                  <Target className="w-5 h-5 text-primary" />
+                  <p className="text-sm font-semibold text-foreground/70">Haftalık Hedef</p>
+                </div>
+                <p className="text-2xl font-bold text-primary">{detoxGoals.targetDailyUsage}</p>
+                <p className="text-xs text-foreground/60 mt-1">dakika/gün</p>
+                <p className="text-xs text-primary/70 mt-2">−{detoxGoals.weeklyReduction} dk/gün azalma</p>
+              </Card>
+
+              <Card className="p-4 bg-gradient-to-br from-white to-accent/10 border-border">
+                <div className="flex items-center gap-2 mb-2">
+                  <TrendingDown className="w-5 h-5 text-accent" />
+                  <p className="text-sm font-semibold text-foreground/70">Haftalık Tasarruf</p>
+                </div>
+                <p className="text-2xl font-bold text-accent">{detoxGoals.weeklySavings}</p>
+                <p className="text-xs text-foreground/60 mt-1">dakika/hafta</p>
+                <p className="text-xs text-accent/70 mt-2">= {Math.floor(detoxGoals.weeklySavings / 60)} saat</p>
+              </Card>
+            </div>
+
+            {/* Aylık Hedef */}
+            <div className="grid grid-cols-2 gap-4">
+              <Card className="p-4 bg-gradient-to-br from-white to-secondary/10 border-border">
+                <div className="flex items-center gap-2 mb-2">
+                  <Target className="w-5 h-5 text-primary" />
+                  <p className="text-sm font-semibold text-foreground/70">4 Haftalık Hedef</p>
+                </div>
+                <p className="text-2xl font-bold text-primary">{detoxGoals.monthlyTargetUsage}</p>
+                <p className="text-xs text-foreground/60 mt-1">dakika/gün</p>
+                <p className="text-xs text-primary/70 mt-2">−{detoxGoals.monthlyReduction} dk/gün azalma</p>
+              </Card>
+
+              <Card className="p-4 bg-gradient-to-br from-white to-accent/10 border-border">
+                <div className="flex items-center gap-2 mb-2">
+                  <TrendingDown className="w-5 h-5 text-accent" />
+                  <p className="text-sm font-semibold text-foreground/70">Aylık Tasarruf</p>
+                </div>
+                <p className="text-2xl font-bold text-accent">{detoxGoals.monthlyGoalSavings}</p>
+                <p className="text-xs text-foreground/60 mt-1">dakika/ay</p>
+                <p className="text-xs text-accent/70 mt-2">= {Math.floor(detoxGoals.monthlyGoalSavings / 60)} saat</p>
+              </Card>
+            </div>
+
+            {/* Önerilen Aktiviteler */}
+            <div>
+              <h4 className="font-bold text-foreground mb-4 flex items-center gap-2">
+                <Activity className="w-5 h-5 text-primary" />
+                Önerilen Aktiviteler
+              </h4>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                {getDetoxActivities(detoxGoals.riskLevel).map((activity, idx) => (
+                  <Card key={idx} className="p-4 bg-gradient-to-br from-white to-secondary/5 border-border hover:shadow-md transition-all">
+                    <div className="flex items-start gap-3">
+                      <span className="text-2xl">{activity.icon}</span>
+                      <div className="flex-1">
+                        <p className="font-semibold text-foreground text-sm">{activity.title}</p>
+                        <p className="text-xs text-foreground/60 mt-1">{activity.description}</p>
+                      </div>
+                    </div>
+                  </Card>
+                ))}
+              </div>
+            </div>
+
+            {/* İpuçları */}
+            <div className="bg-secondary/20 p-4 rounded-lg border border-border">
+              <h4 className="font-bold text-foreground mb-3">💡 Başarı İpuçları</h4>
+              <ul className="space-y-2 text-sm text-foreground/70">
+                <li>• <strong>Kademeli Azalma:</strong> Bir hafta içinde hedefin %50'sine ulaşmayı hedefleyin</li>
+                <li>• <strong>Tetikleyicileri Tanıyın:</strong> Telefonunuzu en çok ne zaman kullandığınızı fark edin</li>
+                <li>• <strong>Alternatif Aktiviteler:</strong> Telefonunuzu kullanmak istediğinizde hemen bir alternatif yapın</li>
+                <li>• <strong>Sosyal Destek:</strong> Arkadaşlarınıza veya ailenize hedeflerinizi anlatın</li>
+                <li>• <strong>Uygulamalar Kullanın:</strong> Telefon kullanım sınırlama uygulamaları indirin</li>
+                <li>• <strong>Gece Rutini:</strong> Uyumadan 1 saat önce telefonunuzu başka odaya koyun</li>
+              </ul>
+            </div>
+
+            <div className="flex gap-3">
+              <Button 
+                onClick={() => {
+                  setCalculatorStep('input');
+                }}
+                variant="outline"
+                className="flex-1"
+              >
+                Geri Dön
+              </Button>
+              <Button 
+                onClick={() => {
+                  setShowCalculator(false);
+                  setCalculatorStep('input');
+                }}
+                className="flex-1 bg-primary hover:bg-primary/90 text-white"
+              >
+                Kapat
+              </Button>
+            </div>
           </div>
         </DialogContent>
       </Dialog>
