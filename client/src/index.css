@@ -1,6 +1,9 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
+/* Google Fonts - Montserrat ve Lato */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700&family=Lato:wght@400;600&display=swap');
+
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
@@ -43,39 +46,42 @@
 }
 
 :root {
-  --primary: var(--color-blue-700);
-  --primary-foreground: var(--color-blue-50);
-  --sidebar-primary: var(--color-blue-600);
-  --sidebar-primary-foreground: var(--color-blue-50);
-  --chart-1: var(--color-blue-300);
-  --chart-2: var(--color-blue-500);
-  --chart-3: var(--color-blue-600);
-  --chart-4: var(--color-blue-700);
-  --chart-5: var(--color-blue-800);
-  --radius: 0.65rem;
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.235 0.015 65);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.235 0.015 65);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.235 0.015 65);
-  --secondary: oklch(0.98 0.001 286.375);
-  --secondary-foreground: oklch(0.4 0.015 65);
-  --muted: oklch(0.967 0.001 286.375);
-  --muted-foreground: oklch(0.552 0.016 285.938);
-  --accent: oklch(0.967 0.001 286.375);
-  --accent-foreground: oklch(0.141 0.005 285.823);
-  --destructive: oklch(0.577 0.245 27.325);
-  --destructive-foreground: oklch(0.985 0 0);
-  --border: oklch(0.92 0.004 286.32);
-  --input: oklch(0.92 0.004 286.32);
-  --ring: oklch(0.623 0.214 259.815);
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.235 0.015 65);
-  --sidebar-accent: oklch(0.967 0.001 286.375);
-  --sidebar-accent-foreground: oklch(0.141 0.005 285.823);
-  --sidebar-border: oklch(0.92 0.004 286.32);
-  --sidebar-ring: oklch(0.623 0.214 259.815);
+  /* Nomofobi Sitesi - Minimalist Wellness Design */
+  /* Renk Paleti: Adaçayı yeşili (#6B9E7F) vurgu, off-white arka plan, koyu gri metin */
+  
+  --primary: #6B9E7F; /* Adaçayı yeşili - dijital detoks, doğa, huzur */
+  --primary-foreground: #F8F9FA;
+  --sidebar-primary: #5A8A6F;
+  --sidebar-primary-foreground: #F8F9FA;
+  --chart-1: #A8C5B0;
+  --chart-2: #6B9E7F;
+  --chart-3: #5A8A6F;
+  --chart-4: #4A7A5F;
+  --chart-5: #3A6A4F;
+  --radius: 0.75rem;
+  --background: #F8F9FA; /* Off-white - dijital gürültüyü azaltır */
+  --foreground: #343A40; /* Koyu gri - yüksek kontrast */
+  --card: #FFFFFF;
+  --card-foreground: #343A40;
+  --popover: #FFFFFF;
+  --popover-foreground: #343A40;
+  --secondary: #E8F0ED; /* Açık yeşil - ikincil vurgu */
+  --secondary-foreground: #343A40;
+  --muted: #D4DFD9; /* Yumuşak gri-yeşil */
+  --muted-foreground: #6B7A75;
+  --accent: #4A90E2; /* Açık mavi - güven, profesyonellik */
+  --accent-foreground: #FFFFFF;
+  --destructive: #E8A87C; /* Yumuşak turuncu - dikkat çekici ama agresif olmayan */
+  --destructive-foreground: #FFFFFF;
+  --border: #E0E8E4; /* Açık yeşil-gri sınır */
+  --input: #F0F4F2;
+  --ring: #6B9E7F;
+  --sidebar: #F8F9FA;
+  --sidebar-foreground: #343A40;
+  --sidebar-accent: #E8F0ED;
+  --sidebar-accent-foreground: #343A40;
+  --sidebar-border: #E0E8E4;
+  --sidebar-ring: #6B9E7F;
 }
 
 .dark {
@@ -119,6 +125,21 @@
   }
   body {
     @apply bg-background text-foreground;
+    font-family: 'Lato', sans-serif;
+    line-height: 1.8;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+  }
+  h1 {
+    @apply text-4xl md:text-5xl;
+  }
+  h2 {
+    @apply text-3xl md:text-4xl;
+  }
+  h3 {
+    @apply text-2xl md:text-3xl;
   }
   button:not(:disabled),
   [role="button"]:not([aria-disabled="true"]),

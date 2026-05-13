@@ -6,6 +6,12 @@ import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import Home from "./pages/Home";
 
+/**
+ * Nomofobi Web Sitesi - Ana Uygulama
+ * Tasarım: Minimalist Wellness & Digital Detox
+ * Tema: Light (off-white arka plan, koyu gri metin, adaçayı yeşili vurgu)
+ */
+
 
 function Router() {
   return (
@@ -28,7 +34,6 @@ function App() {
     <ErrorBoundary>
       <ThemeProvider
         defaultTheme="light"
-        // switchable
       >
         <TooltipProvider>
           <Toaster />
