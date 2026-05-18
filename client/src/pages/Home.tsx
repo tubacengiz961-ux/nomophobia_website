@@ -23,6 +23,7 @@ export default function Home() {
   const [showMoodBoard, setShowMoodBoard] = useState(false);
   const [showMeditation, setShowMeditation] = useState(false);
   const [showEthics, setShowEthics] = useState(false);
+  const [showReminder, setShowReminder] = useState(false);
   const [isMusicPlaying, setIsMusicPlaying] = useState(false);
   const [musicVolume, setMusicVolume] = useState(30);
   const audioRef = useRef<HTMLAudioElement>(null);
@@ -33,6 +34,17 @@ export default function Home() {
   const [dailyUsage, setDailyUsage] = useState(240);
   const [moodLevel, setMoodLevel] = useState(5);
   const [calculatorStep, setCalculatorStep] = useState<'input' | 'results'>('input');
+  
+  // Meditasyon state'leri
+  const [meditationActive, setMeditationActive] = useState(false);
+  const [meditationTime, setMeditationTime] = useState(0);
+  const [meditationDuration, setMeditationDuration] = useState(60);
+  const [breathPhase, setBreathPhase] = useState<'inhale' | 'hold' | 'exhale'>('inhale');
+  const [meditationCount, setMeditationCount] = useState(0);
+  
+  // Hatırlatıcı state'leri
+  const [reminderTime, setReminderTime] = useState('09:00');
+  const [reminderEnabled, setReminderEnabled] = useState(false);
 
   // Müzik kontrol
   useEffect(() => {
@@ -50,6 +62,60 @@ export default function Home() {
       audioRef.current.volume = musicVolume / 100;
     }
   }, [musicVolume]);
+
+  // Meditasyon zamanlayıcı
+  useEffect(() => {
+    if (!meditationActive) return;
+    
+    const interval = setInterval(() => {
+      setMeditationTime(prev => {
+        if (prev >= meditationDuration) {
+          setMeditationActive(false);
+          setMeditationCount(prev => prev + 1);
+          return 0;
+        }
+        return prev + 1;
+      });
+    }, 1000);
+    
+    return () => clearInterval(interval);
+  }, [meditationActive, meditationDuration]);
+
+  // Nefes animasyonu
+  useEffect(() => {
+    if (!meditationActive) return;
+    
+    const breathInterval = setInterval(() => {
+      setBreathPhase(prev => {
+        if (prev === 'inhale') return 'hold';
+        if (prev === 'hold') return 'exhale';
+        return 'inhale';
+      });
+    }, 4000);
+    
+    return () => clearInterval(breathInterval);
+  }, [meditationActive]);
+
+  // Günlük hatırlatıcı
+  useEffect(() => {
+    if (!reminderEnabled) return;
+    
+    const checkReminder = setInterval(() => {
+      const now = new Date();
+      const currentTime = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+      
+      if (currentTime === reminderTime) {
+        if ('Notification' in window && Notification.permission === 'granted') {
+          new Notification('Meditasyon Zamanı!', {
+            body: 'Biraz meditasyon yaparak telefonunuzdan uzaklaşın.',
+            icon: '🧘'
+          });
+        }
+      }
+    }, 60000);
+    
+    return () => clearInterval(checkReminder);
+  }, [reminderEnabled, reminderTime]);
 
   const testQuestions = [
     "Telefonunuz olmadan ne kadar süre dayanabilirsiniz?",
@@ -592,36 +658,116 @@ export default function Home() {
 
       {/* Meditasyon Dialog */}
       <Dialog open={showMeditation} onOpenChange={setShowMeditation}>
-        <DialogContent className="max-w-md">
+        <DialogContent className="max-w-md max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>🧘 Rehberli Meditasyon</DialogTitle>
           </DialogHeader>
-          <div className="space-y-4 text-center">
-            <div className="bg-[#6B9E7F]/10 p-8 rounded-lg">
-              <p className="text-gray-700 mb-4">1 dakikalık rahatlama meditasyonu</p>
-              <div className="text-5xl mb-4">🧘</div>
-              <p className="text-sm text-gray-600 mb-4">Derin nefes alın ve sakinleşin...</p>
-              
-              <div className="space-y-3 text-left text-sm text-gray-700 mb-6">
-                <p>1. Rahat bir pozisyonda oturun</p>
-                <p>2. Gözlerinizi kapatın</p>
-                <p>3. Derin nefes alın (4 saniye tutun, 4 saniyede verin)</p>
-                <p>4. Bunu 1 dakika boyunca tekrarlayın</p>
-                <p>5. Sakinleştiğinizi hissedene kadar devam edin</p>
-              </div>
+          <div className="space-y-4">
+            {!meditationActive ? (
+              <div className="space-y-4">
+                {/* Meditasyon Seçenekleri */}
+                <div className="bg-[#6B9E7F]/10 p-6 rounded-lg text-center">
+                  <p className="text-gray-700 mb-4 font-medium">Meditasyon Süresi Seçin</p>
+                  <div className="flex gap-2 justify-center mb-4">
+                    {[1, 3, 5, 10].map(min => (
+                      <Button
+                        key={min}
+                        onClick={() => setMeditationDuration(min * 60)}
+                        className={`${meditationDuration === min * 60 ? 'bg-[#6B9E7F]' : 'bg-gray-300'} text-white`}
+                      >
+                        {min}dk
+                      </Button>
+                    ))}
+                  </div>
+                  <Button
+                    onClick={() => {
+                      setMeditationActive(true);
+                      setMeditationTime(0);
+                      setBreathPhase('inhale');
+                    }}
+                    className="w-full bg-[#6B9E7F] hover:bg-[#5a8a6e] text-white"
+                  >
+                    Başla
+                  </Button>
+                </div>
 
-              {/* Risk Seviyesine Göre Tavsiye */}
-              {testRiskLevel && (
-                <div className="bg-blue-50 p-3 rounded border border-blue-200 text-left">
-                  <p className="text-xs font-medium text-gray-700">
-                    {testRiskLevel === 'low' && "Haftada 2-3 kez meditasyon yapmanız faydalı olabilir."}
-                    {testRiskLevel === 'medium' && "Günde 1 kez meditasyon yapmanız önerilir."}
-                    {testRiskLevel === 'high' && "Günde 2-3 kez meditasyon yapmanız önerilir."}
-                    {testRiskLevel === 'very-high' && "Günde 3-5 kez meditasyon yapmanız önerilir."}
+                {/* Hatırlatıcı Ayarları */}
+                <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
+                  <p className="text-sm font-medium text-gray-700 mb-3">⏰ Günlük Hatırlatıcı</p>
+                  <div className="flex gap-2 items-center">
+                    <input
+                      type="time"
+                      value={reminderTime}
+                      onChange={(e) => setReminderTime(e.target.value)}
+                      className="flex-1 px-3 py-2 border border-gray-300 rounded"
+                    />
+                    <Button
+                      onClick={() => {
+                        setReminderEnabled(!reminderEnabled);
+                        if (!reminderEnabled && 'Notification' in window) {
+                          Notification.requestPermission();
+                        }
+                      }}
+                      className={`${reminderEnabled ? 'bg-[#6B9E7F]' : 'bg-gray-400'} text-white`}
+                    >
+                      {reminderEnabled ? 'Açık' : 'Kapalı'}
+                    </Button>
+                  </div>
+                  {reminderEnabled && (
+                    <p className="text-xs text-gray-600 mt-2">✓ Her gün {reminderTime}'de hatırlatılacaksınız</p>
+                  )}
+                </div>
+
+                {/* İstatistikler */}
+                {meditationCount > 0 && (
+                  <div className="bg-green-50 p-4 rounded-lg border border-green-200">
+                    <p className="text-sm font-medium text-green-700">🏆 Tamamlanan Meditasyonlar: {meditationCount}</p>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <div className="space-y-4 text-center">
+                {/* Nefes Animasyonu */}
+                <div className="bg-[#6B9E7F]/10 p-12 rounded-lg">
+                  <div
+                    className={`text-8xl transition-all duration-1000 ${
+                      breathPhase === 'inhale' ? 'scale-125' :
+                      breathPhase === 'hold' ? 'scale-100' :
+                      'scale-75'
+                    }`}
+                  >
+                    🧘
+                  </div>
+                  <p className="text-gray-600 mt-4 text-lg font-medium">
+                    {breathPhase === 'inhale' && 'Derin nefes alın...'}
+                    {breathPhase === 'hold' && 'Tutun...'}
+                    {breathPhase === 'exhale' && 'Yavaşça verin...'}
                   </p>
                 </div>
-              )}
-            </div>
+
+                {/* Zamanlayıcı */}
+                <div className="text-center">
+                  <p className="text-4xl font-bold text-[#6B9E7F] mb-2">
+                    {Math.floor((meditationDuration - meditationTime) / 60)}:{String((meditationDuration - meditationTime) % 60).padStart(2, '0')}
+                  </p>
+                  <p className="text-sm text-gray-600">Kalan Süre</p>
+                  <div className="w-full bg-gray-300 rounded-full h-2 mt-4">
+                    <div
+                      className="bg-[#6B9E7F] h-2 rounded-full transition-all"
+                      style={{ width: `${(meditationTime / meditationDuration) * 100}%` }}
+                    />
+                  </div>
+                </div>
+
+                {/* Durdur Butonu */}
+                <Button
+                  onClick={() => setMeditationActive(false)}
+                  className="w-full bg-red-500 hover:bg-red-600 text-white"
+                >
+                  Durdur
+                </Button>
+              </div>
+            )}
           </div>
         </DialogContent>
       </Dialog>
