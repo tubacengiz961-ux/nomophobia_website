@@ -518,6 +518,37 @@ export default function Home() {
           </DialogHeader>
           {calculatorStep === 'input' ? (
             <div className="space-y-6">
+              {/* Test Puanı Göstergesi */}
+              {testResult !== null && (
+                <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
+                  <p className="text-sm font-medium text-gray-700 mb-2">📊 Sizin Nomofobi Test Puanınız:</p>
+                  <p className="text-3xl font-bold text-[#6B9E7F] mb-2">{testResult} Puan</p>
+                  <p className="text-xs text-gray-600">
+                    {testRiskLevel === 'low' && '✓ Düşük Risk Seviyesi'}
+                    {testRiskLevel === 'medium' && '⚠️ Orta Risk Seviyesi'}
+                    {testRiskLevel === 'high' && '⚠️⚠️ Yüksek Risk Seviyesi'}
+                    {testRiskLevel === 'very-high' && '🚨 Çok Yüksek Risk Seviyesi'}
+                  </p>
+                </div>
+              )}
+
+              {/* Tahmini Kullanım Süresi */}
+              {testResult !== null && (
+                <div className="bg-orange-50 p-4 rounded-lg border border-orange-200">
+                  <p className="text-sm font-medium text-gray-700 mb-3">📱 Tahmini Günlük Ekran Süresi:</p>
+                  <p className="text-2xl font-bold text-orange-600 mb-2">
+                    {testResult <= 30 ? '2-3 saat' :
+                     testResult <= 50 ? '4-5 saat' :
+                     testResult <= 70 ? '6-7 saat' :
+                     testResult <= 85 ? '7-8 saat' :
+                     '8+ saat'}
+                  </p>
+                  <p className="text-xs text-gray-600">
+                    Test puanınıza göre tahmini kullanım süresi. Gerçek kullanımınızı girerek daha doğru hedefler belirleyebilirsiniz.
+                  </p>
+                </div>
+              )}
+
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   Günlük Telefon Kullanım Süresi (dakika)
