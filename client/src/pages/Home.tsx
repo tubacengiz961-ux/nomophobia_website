@@ -377,7 +377,7 @@ export default function Home() {
           </DialogHeader>
           {testResult === null ? (
             <div className="space-y-4">
-              <p className="text-sm text-gray-600">Aşağıdaki soruları 0-4 ölçeğinde yanıtlayın (0=Hiç, 4=Çok Sık)</p>
+              <p className="text-sm text-gray-600">Aşağıdaki soruları 0-4 ölçeğinde yanıtlayın</p>
               {testQuestions.map((q, idx) => (
                 <div key={idx} className="space-y-2">
                   <p className="font-medium text-sm">{idx + 1}. {q}</p>
@@ -388,10 +388,22 @@ export default function Home() {
                     step={1}
                     className="w-full"
                   />
-                  <div className="flex justify-between text-xs text-gray-500">
-                    <span>Hiç</span>
-                    <span>Çok Sık</span>
+                  <div className="flex justify-between text-xs font-medium">
+                    <span className={testAnswers[idx] === 0 ? 'text-[#6B9E7F] font-bold' : 'text-gray-400'}>Hiç</span>
+                    <span className={testAnswers[idx] === 1 ? 'text-[#6B9E7F] font-bold' : 'text-gray-400'}>Nadiren</span>
+                    <span className={testAnswers[idx] === 2 ? 'text-[#6B9E7F] font-bold' : 'text-gray-400'}>Bazen</span>
+                    <span className={testAnswers[idx] === 3 ? 'text-[#6B9E7F] font-bold' : 'text-gray-400'}>Sık Sık</span>
+                    <span className={testAnswers[idx] === 4 ? 'text-[#6B9E7F] font-bold' : 'text-gray-400'}>Çok Sık</span>
                   </div>
+                  {testAnswers[idx] > 0 && (
+                    <div className="text-xs text-[#6B9E7F] font-medium text-center">
+                      {testAnswers[idx] === 0 && '✓ Hiç'}
+                      {testAnswers[idx] === 1 && '⚠️ Nadiren'}
+                      {testAnswers[idx] === 2 && '⚠️⚠️ Bazen'}
+                      {testAnswers[idx] === 3 && '⚠️⚠️⚠️ Sık Sık'}
+                      {testAnswers[idx] === 4 && '🚨 Çok Sık'}
+                    </div>
+                  )}
                 </div>
               ))}
               <Button onClick={calculateTestResult} className="w-full bg-[#6B9E7F] hover:bg-[#5a8a6e]">
