@@ -906,9 +906,9 @@ export default function Home() {
 
       {/* Bunu Biliyor muydun? Detay Dialog */}
       <Dialog open={selectedArticle !== null} onOpenChange={() => setSelectedArticle(null)}>
-        <DialogContent className="max-h-[90vh] overflow-y-auto max-w-2xl">
+        <DialogContent className="max-h-[90vh] overflow-y-auto max-w-2xl ltr">
           <DialogHeader>
-            <DialogTitle>
+            <DialogTitle className="text-left">
               {selectedArticle === 0 && "💡 Dopamin Döngüsü"}
               {selectedArticle === 1 && "💡 Mavi Işık Etkisi"}
               {selectedArticle === 2 && "💡 FOMO Sendromu"}
@@ -919,7 +919,7 @@ export default function Home() {
               {selectedArticle === 7 && "💡 Gençlerde Akademik Etki"}
             </DialogTitle>
           </DialogHeader>
-          <div className="space-y-4 text-gray-700 text-sm leading-relaxed">
+          <div className="space-y-4 text-gray-700 text-sm leading-relaxed text-left">
             {selectedArticle === 0 && (
               <>
                 <p><strong>Nedir?</strong> Her telefondan gelen bildirim, mesaj veya sosyal medya beğenisi, beynin ödül sistemini tetikler ve dopamin (mutluluk hormonu) salınımını artırır.</p>
