@@ -1023,10 +1023,11 @@ export default function Home() {
                       style={{
                         transform: isFlipped ? 'rotateY(180deg)' : 'rotateY(0deg)',
                         transformStyle: 'preserve-3d',
-                        transition: 'transform 0.6s'
+                        transition: 'transform 0.6s',
+                        direction: 'ltr'
                       }}
                     >
-                      <div className="text-white text-center">
+                      <div className="text-white text-center" style={{direction: 'ltr'}}>
                         <p className="text-sm text-white/80 mb-2">{isFlipped ? 'İşın Yanı' : 'Soru'}</p>
                         <p className="text-lg font-bold">{isFlipped ? card.a : card.q}</p>
                         <p className="text-xs text-white/60 mt-4">Çevirmek için tıklayın</p>
