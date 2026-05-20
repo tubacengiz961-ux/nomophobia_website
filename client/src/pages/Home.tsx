@@ -906,7 +906,7 @@ export default function Home() {
 
       {/* Bunu Biliyor muydun? Detay Dialog */}
       <Dialog open={selectedArticle !== null} onOpenChange={() => setSelectedArticle(null)}>
-        <DialogContent className="max-h-[90vh] overflow-y-auto max-w-2xl ltr">
+        <DialogContent className="max-h-[90vh] overflow-y-auto max-w-2xl ltr" style={{direction: 'ltr'}}>
           <DialogHeader>
             <DialogTitle className="text-left">
               {selectedArticle === 0 && "💡 Dopamin Döngüsü"}
