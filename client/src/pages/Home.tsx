@@ -815,64 +815,76 @@ export default function Home() {
         </DialogContent>
       </Dialog>
 
-      {/* Derinlemesine Makaleler */}
+      {/* Bunu Biliyor muydun? */}
       <section className="py-16 bg-white">
         <div className="container">
-          <h2 className="text-3xl font-bold text-[#343A40] mb-4">📚 Derinlemesine Makaleler</h2>
-          <p className="text-gray-700 mb-8">Nomofobi, dijital sağlık ve wellness hakkında bilimsel makaleler</p>
+          <h2 className="text-3xl font-bold text-[#343A40] mb-4">💡 Bunu Biliyor muydun?</h2>
+          <p className="text-gray-700 mb-8">Nomofobi ve dijital sağlık hakkında ilginç bilgiler</p>
           
           {!showArticles ? (
             <Button
               onClick={() => setShowArticles(true)}
               className="bg-[#6B9E7F] hover:bg-[#5a8a6e] text-white"
             >
-              Makaleleri Aç
+              İlginç Bilgileri Keşfet
             </Button>
           ) : (
             <div className="space-y-4">
               {[
                 {
                   id: 0,
-                  title: "Nomofobi: Dijital Çağın Yeni Fobisi",
-                  excerpt: "Akıllı telefondan ayrılma korkusu (nomofobi) nasıl ortaya çıktı ve neden giderek yaygınlaşıyor?",
-                  category: "Tanı",
-                  readTime: "8 dakika"
+                  title: "Dopamin Döngüsü",
+                  excerpt: "Her telefondan bildirim, beynin ödül sistemini tetikler ve dopamin salınımını artırır. Bu, kumara benzer bir mekanizmadır!",
+                  emoji: "🧠"
                 },
                 {
                   id: 1,
-                  title: "Beyin Kimyası ve Telefon Bağımlılığı",
-                  excerpt: "Dopamin, serotonin ve diğer nörotransmitterlerin telefon kullanımındaki rolü",
-                  category: "Bilim",
-                  readTime: "10 dakika"
+                  title: "Mavi Işık Etkisi",
+                  excerpt: "Telefon ekranlarının mavi ışığı, melatonin üretimini baskılayarak uyku kalitesini %30 oranında düşürebilir.",
+                  emoji: "💤"
                 },
                 {
                   id: 2,
-                  title: "Dijital Detoks: Bilimsel Yaklaşımlar",
-                  excerpt: "Telefon kullanımını azaltmanın etkili yöntemleri ve bilimsel kanıtları",
-                  category: "Tedavi",
-                  readTime: "12 dakika"
+                  title: "FOMO Sendromu",
+                  excerpt: "'Kaçırma Korkusu' (FOMO), sosyal medyada paylaşılan içerikleri görmeme endişesidir ve anksiyeteyi %40 artırır.",
+                  emoji: "😰"
                 },
                 {
                   id: 3,
-                  title: "Gençlerde Nomofobi: Eğitim ve Gelişim Etkileri",
-                  excerpt: "Akıllı telefon kullanımının öğrenci başarısı, sosyal beceriler ve uyku kalitesine etkileri",
-                  category: "Eğitim",
-                  readTime: "11 dakika"
+                  title: "Dikkat Süresi",
+                  excerpt: "Ortalama insan dikkat süresi 2000'de 12 dakika iken, şimdi 8 saniyeye düşmüştür. Balık balığından daha az dikkat süresi!",
+                  emoji: "⏱️"
                 },
                 {
                   id: 4,
-                  title: "Meditasyon ve Mindfulness: Dijital Detoks Araçları",
-                  excerpt: "Bilinçli farkındalık uygulamalarının telefon bağımlılığını azaltmadaki etkinliği",
-                  category: "Wellness",
-                  readTime: "9 dakika"
+                  title: "Phantom Vibration",
+                  excerpt: "Telefonunuz titremediği halde titreşim hissetme (Phantom Vibration), nomofobi belirtilerinden biridir ve %70 oranında görülür.",
+                  emoji: "📱"
+                },
+                {
+                  id: 5,
+                  title: "Sosyal Medya Algoritması",
+                  excerpt: "Sosyal medya algoritmaları, sizi 3.7 saniye ortalama içerikte tutmak için tasarlanmıştır. Bağımlılık kasıtlı!",
+                  emoji: "🔄"
+                },
+                {
+                  id: 6,
+                  title: "Meditasyon Gücü",
+                  excerpt: "Sadece 10 dakikalık günlük meditasyon, telefon kullanım isteğini 8 hafta içinde %50 oranında azaltabilir.",
+                  emoji: "🧘"
+                },
+                {
+                  id: 7,
+                  title: "Gençlerde Akademik Etki",
+                  excerpt: "Telefon yanında olan öğrencilerin sınavda %20 daha düşük puan aldığı araştırmalarla kanıtlanmıştır.",
+                  emoji: "📚"
                 }
               ].map((article) => (
                 <Card key={article.id} className="p-4 cursor-pointer hover:shadow-lg transition-shadow" onClick={() => setSelectedArticle(article.id)}>
                   <div className="flex justify-between items-start">
                     <div className="flex-1">
                       <div className="flex items-center gap-2 mb-2">
-                        <span className="text-xs bg-[#6B9E7F]/20 text-[#6B9E7F] px-2 py-1 rounded">{article.category}</span>
-                        <span className="text-xs text-gray-500">⏱️ {article.readTime}</span>
+                        <span className="text-2xl">{article.emoji}</span>
                       </div>
                       <h3 className="text-lg font-bold text-[#343A40] mb-2">{article.title}</h3>
                       <p className="text-gray-600 text-sm">{article.excerpt}</p>
@@ -892,62 +904,84 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Makale Detay Dialog */}
+      {/* Bunu Biliyor muydun? Detay Dialog */}
       <Dialog open={selectedArticle !== null} onOpenChange={() => setSelectedArticle(null)}>
         <DialogContent className="max-h-[90vh] overflow-y-auto max-w-2xl">
           <DialogHeader>
             <DialogTitle>
-              {selectedArticle === 0 && "Nomofobi: Dijital Çağın Yeni Fobisi"}
-              {selectedArticle === 1 && "Beyin Kimyası ve Telefon Bağımlılığı"}
-              {selectedArticle === 2 && "Dijital Detoks: Bilimsel Yaklaşımlar"}
-              {selectedArticle === 3 && "Gençlerde Nomofobi: Eğitim ve Gelişim Etkileri"}
-              {selectedArticle === 4 && "Meditasyon ve Mindfulness: Dijital Detoks Araçları"}
+              {selectedArticle === 0 && "💡 Dopamin Döngüsü"}
+              {selectedArticle === 1 && "💡 Mavi Işık Etkisi"}
+              {selectedArticle === 2 && "💡 FOMO Sendromu"}
+              {selectedArticle === 3 && "💡 Dikkat Süresi"}
+              {selectedArticle === 4 && "💡 Phantom Vibration"}
+              {selectedArticle === 5 && "💡 Sosyal Medya Algoritması"}
+              {selectedArticle === 6 && "💡 Meditasyon Gücü"}
+              {selectedArticle === 7 && "💡 Gençlerde Akademik Etki"}
             </DialogTitle>
           </DialogHeader>
           <div className="space-y-4 text-gray-700 text-sm leading-relaxed">
             {selectedArticle === 0 && (
               <>
-                <p><strong>Giriş:</strong> Nomofobi (NO MOBile PHone phoBIA), akıllı telefondan ayrılma korkusunu tanımlar. 2008 yılında İngiltere'de yapılan araştırmada ortaya konan bu terim, dijital çağda giderek yaygınlaşan bir psikolojik durumdur.</p>
-                <p><strong>Tanım:</strong> Nomofobi, telefondan ayrılma kaygısı, sosyal medya bildirimleri kaçırma korkusu, iletişim kopması endişesi ve dijital bağlantıdan kopma istemeyen bir davranış paterni ile karakterize edilir.</p>
-                <p><strong>Yaygınlık:</strong> 2025-2026 araştırmaları, 18-35 yaş grubunun %60'ından fazlasının nomofobi belirtileri gösterdiğini ortaya koymaktadır. Bu oran gençlerde daha yüksektir.</p>
-                <p><strong>Etiyoloji:</strong> Nomofobi, sosyal medya tasarımı, push bildirimleri, FOMO (kaçırma korkusu) ve dopamin döngüsü tarafından güçlendirilen bir davranış bağımlılığıdır.</p>
-                <p><strong>Sonuç:</strong> Nomofobi, sadece bireysel bir sorun değil, toplumsal bir sağlık meselesidir. Bilinçli farkındalık ve dijital okuryazarlık bu sorunun çözümünde önemli rol oynamaktadır.</p>
+                <p><strong>Nedir?</strong> Her telefondan gelen bildirim, mesaj veya sosyal medya beğenisi, beynin ödül sistemini tetikler ve dopamin (mutluluk hormonu) salınımını artırır.</p>
+                <p><strong>Mekanizma:</strong> Bu sistem, kumara benzer şekilde çalışır. Belirsiz ödüller, beynin daha fazla dopamin beklentisiyle çalışmasına neden olur.</p>
+                <p><strong>Sonuç:</strong> Zamanla, beyin bu dopamin patlayışına bağımlı hale gelir ve telefon olmadan mutsuz hissedersiniz.</p>
+                <p><strong>Çözüm:</strong> Bildirimleri kapatmak, dopamin döngüsünü kırmaya yardımcı olur.</p>
               </>
             )}
             {selectedArticle === 1 && (
               <>
-                <p><strong>Dopamin ve Ödül Sistemi:</strong> Akıllı telefonlar, beynin ödül sistemini aktive ederek dopamin salınımını tetikler. Her bildirim, mesaj veya beğeni, beyne bir ödül sinyali gönderir.</p>
-                <p><strong>Serotonin Dengesizliği:</strong> Uzun süreli telefon kullanımı, serotonin seviyelerini düşürerek depresyon ve anksiyete belirtilerine yol açabilir.</p>
-                <p><strong>Uyku Hormonları:</strong> Telefon ekranlarından yayılan mavi ışık, melatonin üretimini baskılar ve uyku kalitesini düşürür.</p>
-                <p><strong>Stres Hormonları:</strong> Sosyal medya kullanımı, kortisol (stres hormonu) seviyelerini artırarak kronik strese neden olabilir.</p>
-                <p><strong>Nöral Adaptasyon:</strong> Tekrarlanan telefon kullanımı, beynin ödül sistemini yeniden programlar ve bağımlılığı güçlendirir.</p>
+                <p><strong>Nedir?</strong> Telefon ve bilgisayar ekranları, mavi ışık yayar. Bu ışık, melatonin (uyku hormonu) üretimini baskılar.</p>
+                <p><strong>Etki:</strong> Uyku saatinden 2 saat önce telefon kullanmak, uyku kalitesini %30 oranında düşürebilir.</p>
+                <p><strong>Sonuç:</strong> Kötü uyku, gün içinde yorgunluk, dikkat dağınıklığı ve akademik performans düşüşüne neden olur.</p>
+                <p><strong>Çözüm:</strong> Uyku saatinden 1 saat önce telefonları kapatın veya mavi ışık filtresi kullanın.</p>
               </>
             )}
             {selectedArticle === 2 && (
               <>
-                <p><strong>Kademeli Azalma:</strong> Telefon kullanımını aniden kesmenin yerine, kademeli olarak azaltmak daha etkilidir. Haftada %10-15 oranında azaltma hedefleyin.</p>
-                <p><strong>Alternatif Aktiviteler:</strong> Telefon yerine kitap okuma, spor, sanat, sosyal aktiviteler gibi alternatif aktiviteler bulun.</p>
-                <p><strong>Uyku Hijyeni:</strong> Uyku saatinden 1 saat önce telefonları kapatın. Mavi ışık filtresi kullanın.</p>
-                <p><strong>Meditasyon ve Mindfulness:</strong> Günlük meditasyon uygulaması, telefon bağımlılığını azaltmada %40 oranında etkilidir.</p>
-                <p><strong>Sosyal Destek:</strong> Aile ve arkadaşlarla bu yolculuğu paylaşın. Grup halinde dijital detoks daha etkilidir.</p>
+                <p><strong>Nedir?</strong> FOMO (Fear Of Missing Out), sosyal medyada paylaşılan içerikleri görmeme endişesidir.</p>
+                <p><strong>Etki:</strong> FOMO, anksiyete ve depresyon oranlarını %40 oranında artırır. Sürekli telefon kontrolüne neden olur.</p>
+                <p><strong>Sonuç:</strong> Sosyal medya algoritmaları, FOMO'yu kasıtlı olarak tetikleyerek kullanıcıları bağımlı hale getirir.</p>
+                <p><strong>Çözüm:</strong> Sosyal medya kullanım saatlerini sınırlandırın ve gerçek hayat aktivitelerine odaklanın.</p>
               </>
             )}
             {selectedArticle === 3 && (
               <>
-                <p><strong>Akademik Performans:</strong> Aşırı telefon kullanımı, öğrenci başarısını %15-25 oranında düşürmektedir. Dikkat dağınıklığı ve hafıza sorunlarına yol açar.</p>
-                <p><strong>Sosyal Beceriler:</strong> Telefon kullanımı, yüz yüze iletişim becerilerini zayıflatır. Empati ve sosyal duyarlılık azalır.</p>
-                <p><strong>Uyku ve Gelişim:</strong> Gençlerin uyku kalitesi düştüğünde, fiziksel ve zihinsel gelişim olumsuz etkilenir.</p>
-                <p><strong>Ruh Sağlığı:</strong> Sosyal medya karşılaştırması, depresyon ve anksiyete oranlarını %30 oranında artırmaktadır.</p>
-                <p><strong>Eğitim Önerileri:</strong> Okullar, dijital okuryazarlık ve telefon yönetimi konusunda eğitim vermelidir.</p>
+                <p><strong>Gerçek:</strong> 2000 yılında ortalama insan dikkat süresi 12 dakika iken, şimdi 8 saniyeye düşmüştür!</p>
+                <p><strong>İlginç Bilgi:</strong> Balık balığının dikkat süresi 9 saniye olup, insanlar balıktan daha az dikkat süresi ile yaşıyor.</p>
+                <p><strong>Neden?</strong> Sosyal medya algoritmaları, kısa dikkat süresi için tasarlanmıştır. Her 3-5 saniyede yeni içerik gösterilir.</p>
+                <p><strong>Sonuç:</strong> Uzun süreli okuma, çalışma ve derslere konsantre olmak zorlaşmıştır.</p>
               </>
             )}
             {selectedArticle === 4 && (
               <>
-                <p><strong>Meditasyonun Mekanizması:</strong> Meditasyon, prefrontal korteksi aktive ederek impulse kontrol ve karar alma yeteneklerini güçlendirir.</p>
-                <p><strong>Mindfulness Uygulaması:</strong> Günlük 10-15 dakikalık meditasyon, telefon kullanım isteğini %35 oranında azaltır.</p>
-                <p><strong>Nefes Egzersizleri:</strong> Derin nefes alma, parasempatik sinir sistemini aktive ederek anksiyeteyi azaltır.</p>
-                <p><strong>Vücut Taraması:</strong> Vücut taraması meditasyonu, fiziksel farkındalığı artırır ve telefon bağımlılığını kırır.</p>
-                <p><strong>Uzun Vadeli Etkiler:</strong> Düzenli meditasyon yapanlar, 8 hafta sonra telefon kullanımını %50 oranında azaltabilmektedir.</p>
+                <p><strong>Nedir?</strong> Telefonunuz titremediği halde titreşim hissetme, Phantom Vibration Syndrome olarak bilinir.</p>
+                <p><strong>Yaygınlık:</strong> Nomofobi belirtileri gösteren %70 oranında kişi, phantom vibration yaşamıştır.</p>
+                <p><strong>Neden?</strong> Beyin, telefon titreşimine o kadar alışmıştır ki, beklenti halinde titreşimi hayal eder.</p>
+                <p><strong>Sonuç:</strong> Bu, nomofobi ve telefon bağımlılığının güçlü bir göstergesidir.</p>
+              </>
+            )}
+            {selectedArticle === 5 && (
+              <>
+                <p><strong>Tasarım:</strong> Sosyal medya algoritmaları, sizi ortalama 3.7 saniye içerikte tutmak için tasarlanmıştır.</p>
+                <p><strong>Amaç:</strong> Algoritma, sizi daha fazla içerik görmek için tutmaya çalışır ve reklam geliri artırır.</p>
+                <p><strong>Gerçek:</strong> Bağımlılık, sosyal medya şirketlerinin kasıtlı tasarımının sonucudur.</p>
+                <p><strong>Çözüm:</strong> Algoritmanın kontrolünde olmak yerine, kendi zamanınızı kontrol edin.</p>
+              </>
+            )}
+            {selectedArticle === 6 && (
+              <>
+                <p><strong>Güç:</strong> Sadece 10 dakikalık günlük meditasyon, telefon kullanım isteğini 8 hafta içinde %50 oranında azaltabilir.</p>
+                <p><strong>Mekanizma:</strong> Meditasyon, prefrontal korteksi (karar alma bölgesi) aktive eder ve impulse kontrolü güçlendirir.</p>
+                <p><strong>Ek Faydalar:</strong> Stres azalır, uyku kalitesi artar, akademik performans iyileşir.</p>
+                <p><strong>Çözüm:</strong> Her gün 10 dakika meditasyon yaparak telefon bağımlılığını kırabilirsiniz.</p>
+              </>
+            )}
+            {selectedArticle === 7 && (
+              <>
+                <p><strong>Araştırma:</strong> Telefon yanında olan öğrencilerin sınavda %20 daha düşük puan aldığı kanıtlanmıştır.</p>
+                <p><strong>Neden?</strong> Telefon, dikkat dağınıklığı yaratır. Beyin, telefon olabileceğini düşünerek konsantrasyon kaybeder.</p>
+                <p><strong>Etki:</strong> Telefon görünmese bile, varlığı akademik performansı düşürür.</p>
+                <p><strong>Çözüm:</strong> Ders sırasında telefonu başka bir odaya koyun veya kapatın.</p>
               </>
             )}
           </div>
@@ -1043,93 +1077,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Kaynakça & Referanslar */}
-      <section className="py-16 bg-white">
-        <div className="container">
-          <h2 className="text-3xl font-bold text-[#343A40] mb-4">📚 Kaynakça & Referanslar</h2>
-          <p className="text-gray-700 mb-8">Bu platformda kullanılan akademik kaynaklar ve bilimsel araştırmalar</p>
-          
-          {!showReferences ? (
-            <Button
-              onClick={() => setShowReferences(true)}
-              className="bg-[#6B9E7F] hover:bg-[#5a8a6e] text-white"
-            >
-              Kaynakları Göster
-            </Button>
-          ) : (
-            <div className="space-y-4">
-              {[
-                {
-                  title: "Nomophobia: Dependency on Virtual Environments and the Internet",
-                  authors: "King, A. L. S., et al.",
-                  year: "2013",
-                  journal: "Computers in Human Behavior",
-                  url: "https://doi.org/10.1016/j.chb.2013.06.039"
-                },
-                {
-                  title: "A proposal for including nomophobia in the new DSM-5",
-                  authors: "Bragazzi, N. L., & Del Puente, G.",
-                  year: "2014",
-                  journal: "Psychology Research and Behavior Management",
-                  url: "https://doi.org/10.2147/PRBM.S39535"
-                },
-                {
-                  title: "Exploring the dimensions of nomophobia: Development and validation of a self-reported questionnaire",
-                  authors: "Yildirim, C., & Correia, A. P.",
-                  year: "2015",
-                  journal: "Computers in Human Behavior",
-                  url: "https://doi.org/10.1016/j.chb.2015.02.059"
-                },
-                {
-                  title: "Smartphone addiction and its relationship with anxiety and depression in university students",
-                  authors: "Demirci, K., et al.",
-                  year: "2015",
-                  journal: "Journal of Behavioral Addictions",
-                  url: "https://doi.org/10.1556/2006.3.2015.010"
-                },
-                {
-                  title: "The impact of social media on mental health: A systematic review",
-                  authors: "Primack, B. A., et al.",
-                  year: "2017",
-                  journal: "Journal of Adolescent Health",
-                  url: "https://doi.org/10.1016/j.jadohealth.2016.10.129"
-                },
-                {
-                  title: "Mindfulness-based interventions for smartphone addiction: A systematic review",
-                  authors: "Zhang, L., et al.",
-                  year: "2021",
-                  journal: "Frontiers in Psychology",
-                  url: "https://doi.org/10.3389/fpsyg.2021.661537"
-                }
-              ].map((ref, idx) => (
-                <Card key={idx} className="p-4 hover:shadow-lg transition-shadow">
-                  <div className="space-y-2">
-                    <h3 className="font-bold text-[#343A40]">{ref.title}</h3>
-                    <p className="text-sm text-gray-600">
-                      <strong>{ref.authors}</strong> ({ref.year})
-                    </p>
-                    <p className="text-sm text-gray-600 italic">{ref.journal}</p>
-                    <a
-                      href={ref.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-[#6B9E7F] hover:underline text-sm font-semibold"
-                    >
-                      🔗 Kaynağa Git
-                    </a>
-                  </div>
-                </Card>
-              ))}
-              <Button
-                onClick={() => setShowReferences(false)}
-                className="w-full bg-gray-400 hover:bg-gray-500 text-white"
-              >
-                Kapat
-              </Button>
-            </div>
-          )}
-        </div>
-      </section>
+
 
       {/* Etik İlkeler & Gizlilik */}
       <section className="container py-16 mb-12">
