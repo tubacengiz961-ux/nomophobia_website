@@ -1013,25 +1013,27 @@ export default function Home() {
                 { q: "Meditasyon telefon bağımlılığını ne kadar azaltır?", a: "Düzenli meditasyon, telefon kullanımını 8 hafta sonra %35-50 oranında azaltabilir" },
                 { q: "Mavi ışık nedir?", a: "Telefon ekranlarından yayılan ve melatonin üretimini baskılayan ışık" },
               ].map((card, idx) => (
-                <div key={idx} className={`relative h-48 cursor-pointer transition-transform duration-300 ${
-                  idx === currentCardIndex ? 'scale-100' : 'scale-75 opacity-50'
+                <div key={idx} className={`${
+                  idx === currentCardIndex ? 'block' : 'hidden'
                 }`}>
                   {idx === currentCardIndex && (
-                    <div
-                      onClick={() => setIsFlipped(!isFlipped)}
-                      className="w-full h-full bg-gradient-to-br from-[#6B9E7F] to-[#5a8a6e] rounded-lg p-6 flex items-center justify-center cursor-pointer hover:shadow-lg transition-shadow"
-                      style={{
-                        transform: isFlipped ? 'rotateY(180deg)' : 'rotateY(0deg)',
-                        transformStyle: 'preserve-3d',
-                        transition: 'transform 0.6s',
-                        direction: 'ltr'
-                      }}
-                    >
-                      <div className="text-white text-center" style={{direction: 'ltr'}}>
-                        <p className="text-sm text-white/80 mb-2">{isFlipped ? 'İşın Yanı' : 'Soru'}</p>
-                        <p className="text-lg font-bold">{isFlipped ? card.a : card.q}</p>
-                        <p className="text-xs text-white/60 mt-4">Çevirmek için tıklayın</p>
+                    <div className="bg-[#F8F9FA] rounded-lg p-8 border-2 border-[#6B9E7F]" style={{direction: 'ltr'}}>
+                      <div className="mb-6">
+                        <p className="text-sm text-[#6B9E7F] font-semibold mb-2">❓ SORU</p>
+                        <p className="text-xl font-bold text-[#343A40]">{card.q}</p>
                       </div>
+                      <button
+                        onClick={() => setIsFlipped(!isFlipped)}
+                        className="w-full bg-[#6B9E7F] hover:bg-[#5a8a6e] text-white py-3 rounded-lg font-semibold transition-colors mb-4"
+                      >
+                        {isFlipped ? '✓ Cevap Gösteriliyor' : '? Cevabı Göster'}
+                      </button>
+                      {isFlipped && (
+                        <div className="bg-white rounded-lg p-6 border-l-4 border-[#6B9E7F]">
+                          <p className="text-sm text-[#6B9E7F] font-semibold mb-2">✓ CEVAP</p>
+                          <p className="text-lg text-[#343A40]">{card.a}</p>
+                        </div>
+                      )}
                     </div>
                   )}
                 </div>
