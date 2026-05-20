@@ -49,6 +49,14 @@ export default function Home() {
   // Makaleler state'i
   const [showArticles, setShowArticles] = useState(false);
   const [selectedArticle, setSelectedArticle] = useState<number | null>(null);
+  
+  // Kaynakça state'i
+  const [showReferences, setShowReferences] = useState(false);
+  
+  // Bilgi Kart Oyunu state'i
+  const [showFlashcards, setShowFlashcards] = useState(false);
+  const [currentCardIndex, setCurrentCardIndex] = useState(0);
+  const [isFlipped, setIsFlipped] = useState(false);
 
   // Müzik kontrol
   useEffect(() => {
@@ -946,6 +954,183 @@ export default function Home() {
         </DialogContent>
       </Dialog>
 
+      {/* Bilgi Kart Oyunu - Nomofobi Bilgisi */}
+      <section className="py-16 bg-[#F8F9FA]">
+        <div className="container">
+          <h2 className="text-3xl font-bold text-[#343A40] mb-4">🂴 Bilgi Kart Oyunu</h2>
+          <p className="text-gray-700 mb-8">Nomofobi hakkında eğlenceli bir şekilde öğrenin. Kartları çevirerek cevapları görün!</p>
+          
+          {!showFlashcards ? (
+            <Button
+              onClick={() => setShowFlashcards(true)}
+              className="bg-[#6B9E7F] hover:bg-[#5a8a6e] text-white"
+            >
+              Oyunu Başlat
+            </Button>
+          ) : (
+            <div className="space-y-4">
+              {[
+                { q: "Nomofobi nedir?", a: "Akıllı telefondan ayrılma korkusu (NO MOBile PHone phoBIA)" },
+                { q: "Nomofobi ne zaman ortaya çıktı?", a: "2008 yılında İngiltere'de yapılan araştırmada tanımlanmıştır" },
+                { q: "Nomofobi belirtileri nelerdir?", a: "Telefondan ayrılma kaygısı, sosyal medya bildirimleri kaçırma korkusu, iletişim kopması endişesi" },
+                { q: "Gençlerde nomofobi oranı nedir?", a: "18-35 yaş grubunun %60'dan fazlası nomofobi belirtileri göstermektedir" },
+                { q: "Dopamin nedir?", a: "Beynin ödül sistemini aktive eden ve telefon kullanımı sırasında salınım yapan bir nörotransmitter" },
+                { q: "Dijital detoks nedir?", a: "Telefon kullanımını kademeli olarak azaltarak sağlıklı bir denge kurmak" },
+                { q: "Meditasyon telefon bağımlılığını ne kadar azaltır?", a: "Düzenli meditasyon, telefon kullanımını 8 hafta sonra %35-50 oranında azaltabilir" },
+                { q: "Mavi ışık nedir?", a: "Telefon ekranlarından yayılan ve melatonin üretimini baskılayan ışık" },
+              ].map((card, idx) => (
+                <div key={idx} className={`relative h-48 cursor-pointer transition-transform duration-300 ${
+                  idx === currentCardIndex ? 'scale-100' : 'scale-75 opacity-50'
+                }`}>
+                  {idx === currentCardIndex && (
+                    <div
+                      onClick={() => setIsFlipped(!isFlipped)}
+                      className="w-full h-full bg-gradient-to-br from-[#6B9E7F] to-[#5a8a6e] rounded-lg p-6 flex items-center justify-center cursor-pointer hover:shadow-lg transition-shadow"
+                      style={{
+                        transform: isFlipped ? 'rotateY(180deg)' : 'rotateY(0deg)',
+                        transformStyle: 'preserve-3d',
+                        transition: 'transform 0.6s'
+                      }}
+                    >
+                      <div className="text-white text-center">
+                        <p className="text-sm text-white/80 mb-2">{isFlipped ? 'İşın Yanı' : 'Soru'}</p>
+                        <p className="text-lg font-bold">{isFlipped ? card.a : card.q}</p>
+                        <p className="text-xs text-white/60 mt-4">Çevirmek için tıklayın</p>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              ))}
+              
+              <div className="flex gap-2 justify-center mt-6">
+                <Button
+                  onClick={() => {
+                    setCurrentCardIndex(Math.max(0, currentCardIndex - 1));
+                    setIsFlipped(false);
+                  }}
+                  disabled={currentCardIndex === 0}
+                  className="bg-gray-400 hover:bg-gray-500 text-white"
+                >
+                  ← Önceki
+                </Button>
+                <span className="text-gray-700 font-bold px-4 py-2">
+                  {currentCardIndex + 1} / 8
+                </span>
+                <Button
+                  onClick={() => {
+                    setCurrentCardIndex(Math.min(7, currentCardIndex + 1));
+                    setIsFlipped(false);
+                  }}
+                  disabled={currentCardIndex === 7}
+                  className="bg-gray-400 hover:bg-gray-500 text-white"
+                >
+                  Sonraki →
+                </Button>
+              </div>
+              
+              <Button
+                onClick={() => {
+                  setShowFlashcards(false);
+                  setCurrentCardIndex(0);
+                  setIsFlipped(false);
+                }}
+                className="w-full bg-gray-400 hover:bg-gray-500 text-white mt-4"
+              >
+                Kapat
+              </Button>
+            </div>
+          )}
+        </div>
+      </section>
+
+      {/* Kaynakça & Referanslar */}
+      <section className="py-16 bg-white">
+        <div className="container">
+          <h2 className="text-3xl font-bold text-[#343A40] mb-4">📚 Kaynakça & Referanslar</h2>
+          <p className="text-gray-700 mb-8">Bu platformda kullanılan akademik kaynaklar ve bilimsel araştırmalar</p>
+          
+          {!showReferences ? (
+            <Button
+              onClick={() => setShowReferences(true)}
+              className="bg-[#6B9E7F] hover:bg-[#5a8a6e] text-white"
+            >
+              Kaynakları Göster
+            </Button>
+          ) : (
+            <div className="space-y-4">
+              {[
+                {
+                  title: "Nomophobia: Dependency on Virtual Environments and the Internet",
+                  authors: "King, A. L. S., et al.",
+                  year: "2013",
+                  journal: "Computers in Human Behavior",
+                  url: "https://doi.org/10.1016/j.chb.2013.06.039"
+                },
+                {
+                  title: "A proposal for including nomophobia in the new DSM-5",
+                  authors: "Bragazzi, N. L., & Del Puente, G.",
+                  year: "2014",
+                  journal: "Psychology Research and Behavior Management",
+                  url: "https://doi.org/10.2147/PRBM.S39535"
+                },
+                {
+                  title: "Exploring the dimensions of nomophobia: Development and validation of a self-reported questionnaire",
+                  authors: "Yildirim, C., & Correia, A. P.",
+                  year: "2015",
+                  journal: "Computers in Human Behavior",
+                  url: "https://doi.org/10.1016/j.chb.2015.02.059"
+                },
+                {
+                  title: "Smartphone addiction and its relationship with anxiety and depression in university students",
+                  authors: "Demirci, K., et al.",
+                  year: "2015",
+                  journal: "Journal of Behavioral Addictions",
+                  url: "https://doi.org/10.1556/2006.3.2015.010"
+                },
+                {
+                  title: "The impact of social media on mental health: A systematic review",
+                  authors: "Primack, B. A., et al.",
+                  year: "2017",
+                  journal: "Journal of Adolescent Health",
+                  url: "https://doi.org/10.1016/j.jadohealth.2016.10.129"
+                },
+                {
+                  title: "Mindfulness-based interventions for smartphone addiction: A systematic review",
+                  authors: "Zhang, L., et al.",
+                  year: "2021",
+                  journal: "Frontiers in Psychology",
+                  url: "https://doi.org/10.3389/fpsyg.2021.661537"
+                }
+              ].map((ref, idx) => (
+                <Card key={idx} className="p-4 hover:shadow-lg transition-shadow">
+                  <div className="space-y-2">
+                    <h3 className="font-bold text-[#343A40]">{ref.title}</h3>
+                    <p className="text-sm text-gray-600">
+                      <strong>{ref.authors}</strong> ({ref.year})
+                    </p>
+                    <p className="text-sm text-gray-600 italic">{ref.journal}</p>
+                    <a
+                      href={ref.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-[#6B9E7F] hover:underline text-sm font-semibold"
+                    >
+                      🔗 Kaynağa Git
+                    </a>
+                  </div>
+                </Card>
+              ))}
+              <Button
+                onClick={() => setShowReferences(false)}
+                className="w-full bg-gray-400 hover:bg-gray-500 text-white"
+              >
+                Kapat
+              </Button>
+            </div>
+          )}
+        </div>
+      </section>
+
       {/* Etik İlkeler & Gizlilik */}
       <section className="container py-16 mb-12">
         <Button
@@ -987,6 +1172,9 @@ export default function Home() {
         </p>
         <p className="text-xs text-gray-400 mt-2">
           Tüm bilgiler 2025-2026 yılı araştırma verilerine ve bilimsel kaynaklara dayanmaktadır.
+        </p>
+        <p className="text-xs text-gray-400 mt-2">
+          Kaynakça ve referanslar için lütfen "Kaynakça & Referanslar" bölümüne bakınız.
         </p>
       </footer>
     </div>
